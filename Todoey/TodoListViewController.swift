@@ -56,11 +56,11 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // what will happen once the user clicks the Add Item button on our UIAlert
 
-            if let text = textField.text {
-                self.itemArray.append(text)
+            if textField.text != "" {
+                self.itemArray.append(textField.text!)
                 self.tableView.reloadData()
             } else {
-                print("empty string!")
+                print("Empty String!")
             }
             
         }
