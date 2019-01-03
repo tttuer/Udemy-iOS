@@ -25,6 +25,15 @@ class CategoryViewController: SwipeTableViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        guard let navBar = navigationController?.navigationBar else { fatalError() }
+        guard let navBarColor = navBar.barTintColor else { fatalError() }
+        
+        navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+        navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+    }
+    
     //MARK: - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -37,18 +46,27 @@ class CategoryViewController: SwipeTableViewController {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
-        
-        cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "1D9BF6")
+        if let category = categories?[indexPath.row] {
+            
+            cell.textLabel?.text = category.name
+            
+            guard let categoryColor = UIColor(hexString: category.color) else { fatalError() }
+            
+            cell.backgroundColor = categoryColor
+            cell.textLabel?.textColor = ContrastColorOf(categoryColor, returnFlat: true)
+            
+        }
         
         return cell
+        
     }
     
     //MARK: - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "goToItems", sender: self)
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
